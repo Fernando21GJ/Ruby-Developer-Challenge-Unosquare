@@ -1,5 +1,13 @@
 FROM ruby:2.7.2
-RUN apt-get update -qq && apt-get install yarn -y build-essential libpq-dev sqlite3 nodejs
+#install dependencies
+RUN apt-get update -qq && apt-get install --no-install-recommends -y postgresql-client \
+  curl \
+  build-essential \
+  libpq-dev &&\
+  curl -sL https://deb.nodesource.com/setup_10.x | bash - && \
+  curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - && \
+  echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list && \
+  apt-get update && apt-get install --no-install-recommends -y nodejs yarn
 RUN mkdir /myapp
 WORKDIR /myapp
 COPY Gemfile /myapp/Gemfile
